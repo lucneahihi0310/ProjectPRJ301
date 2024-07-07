@@ -103,7 +103,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             int category_id = Integer.parseInt(category_id_str);
 
             // Specify the upload directory
-            String uploadDirectory = "D:\\PRJ301_3\\project\\projectPRJ301\\web\\img";
+            String uploadDirectory = "D:\\FALL2023\\PRJ301_3\\project\\projectPRJ301\\web\\img";
 
             // Get the submitted file name
             String fileName = Paths.get(img.getSubmittedFileName()).getFileName().toString();

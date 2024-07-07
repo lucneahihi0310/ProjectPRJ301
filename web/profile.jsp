@@ -42,7 +42,7 @@
 
 
 
-         
+
 
 
             <!-- Checkout Start -->
@@ -51,17 +51,17 @@
                     <div class="col-lg-12">
                         <div class="mb-5">
                             <h4 class="font-weight-semi-bold mb-4">Your Profile: </h4>
-                            <c:if test="${not empty errorMessage}">
+                        <c:if test="${not empty errorMessage}">
                             <div class="alert alert-danger">${errorMessage}</div>
                         </c:if>
-                            <c:if test="${not empty message}">
+                        <c:if test="${not empty message}">
                             <div class="alert alert-success">${message}</div>
                         </c:if>
-                            <div class="row">
+                        <div class="row">
 
-                                <div class="col-md-6 form-group">
-                                    <label>Full Name:</label>
-                                    <input readonly class="form-control" type="text" placeholder="${sessionScope.username.getCustomer_name()}">
+                            <div class="col-md-6 form-group">
+                                <label>Full Name:</label>
+                                <input readonly class="form-control" type="text" placeholder="${sessionScope.username.getCustomer_name()}">
                             </div>
 
                             <div class="col-md-6 form-group">
@@ -94,35 +94,40 @@
                     <div class="collapse mb-5" id="shipping-address">
                         <h4 class="font-weight-semi-bold mb-4">Your Profile:</h4>
 
-                        <form class="row" action="edit-profile" method="post">
+                        <form class="row" action="edit-profile" method="post" onsubmit="return validateForm()">
                             <div class="col-md-6 form-group">
                                 <label>Full Name:</label>
                                 <input name="customer_name" class="form-control" type="text" value="${sessionScope.username.getCustomer_name()}">
+                                <div class="error-message text-danger" id="fullNameError"></div>
                             </div>
 
                             <div class="col-md-6 form-group">
                                 <label>Phone:</label>
                                 <input name="phone" class="form-control" type="text" value="${sessionScope.username.getPhone()}">
+                                <div class="error-message text-danger" id="phoneError"></div>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Address:</label>
                                 <input name="address" class="form-control" type="text" value="${sessionScope.username.getAddress()}">
+                                <div class="error-message text-danger" id="addressError"></div>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Email</label>
-                                <input name="email" class="form-control" type="text" value="${sessionScope.username.getEmail()}" >
+                                <input name="email" class="form-control" type="text" value="${sessionScope.username.getEmail()}">
+                                <div class="error-message text-danger" id="emailError"></div>
                             </div>
-                           
+
                             <div class="col-md-6 form-group">
                                 <label>Password</label>
                                 <input name="pass" class="form-control" type="password" placeholder="Enter password" value="${sessionScope.username.getPassword()}">
+                                <div class="error-message text-danger" id="passwordError"></div>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>RE_Password:</label>
                                 <input name="repass" class="form-control" type="password" placeholder="Enter Re-password" value="${sessionScope.username.getPassword()}">
+                                <div class="error-message text-danger" id="repassError"></div>
                             </div>
                             <div class="input-group">
-
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">Submit</button>
                                 </div>
@@ -130,9 +135,11 @@
                         </form>
 
 
+
+
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <!-- Checkout End -->
@@ -225,6 +232,74 @@
 
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+
+        <script>
+                              function validateForm() {
+                                  // Clear previous error messages
+                                  document.getElementById('fullNameError').textContent = '';
+                                  document.getElementById('phoneError').textContent = '';
+                                  document.getElementById('addressError').textContent = '';
+                                  document.getElementById('emailError').textContent = '';
+                                  document.getElementById('passwordError').textContent = '';
+                                  document.getElementById('repassError').textContent = '';
+
+                                  // Get form elements
+                                  const fullName = document.querySelector('input[name="customer_name"]');
+                                  const phone = document.querySelector('input[name="phone"]');
+                                  const address = document.querySelector('input[name="address"]');
+                                  const email = document.querySelector('input[name="email"]');
+                                  const password = document.querySelector('input[name="pass"]');
+                                  const repass = document.querySelector('input[name="repass"]');
+
+                                  // Regular expressions for validation
+                                  const emailRegex = /^[^\s@]+@gmail\.com$/;
+                                  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,100}$/;
+
+                                  let isValid = true;
+
+                                  // Full Name validation
+                                  if (fullName.value.trim() === "" || fullName.value.length < 3 || fullName.value.length > 100) {
+                                      document.getElementById('fullNameError').textContent = "Full Name must be between 3 and 100 characters and cannot be empty.";
+                                      isValid = false;
+                                  }
+
+                                  // Phone validation
+                                  if (phone.value.trim() === "" || phone.value.length > 10 || !/^\d{10}$/.test(phone.value)) {
+                                      document.getElementById('phoneError').textContent = "Phone must be 10 digits and cannot be empty.";
+                                      isValid = false;
+                                  }
+
+                                  // Address validation
+                                  if (address.value.trim() === "" || address.value.length < 8 || address.value.length > 200) {
+                                      document.getElementById('addressError').textContent = "Address must be between 8 and 200 characters and cannot be empty.";
+                                      isValid = false;
+                                  }
+
+                                  // Email validation
+                                  if (email.value.trim() === "" || !emailRegex.test(email.value)) {
+                                      document.getElementById('emailError').textContent = "Email must be in the format '...@gmail.com' and cannot be empty.";
+                                      isValid = false;
+                                  }
+
+                                  // Password validation
+                                  if (password.value.trim() === "" || !passwordRegex.test(password.value)) {
+                                      document.getElementById('passwordError').textContent = "Password must be between 8 and 100 characters, must contain at least one uppercase letter and one number, and cannot be empty.";
+                                      isValid = false;
+                                  }
+
+                                  // Confirm Password validation
+                                  if (repass.value !== password.value) {
+                                      document.getElementById('repassError').textContent = "Passwords do not match.";
+                                      isValid = false;
+                                  }
+
+                                  // If any validation fails
+                                  return isValid;
+                              }
+        </script>
+
+
+
     </body>
 
 </html>

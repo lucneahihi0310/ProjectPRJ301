@@ -149,7 +149,7 @@
                                 if (!img) {
                                     document.getElementById('imgError').textContent = "Image Product is required.";
                                     isValid = false;
-                                } else if (img.size > 5485760) { // 10MB in bytes
+                                } else if (img.size > 10485760) { // 10MB in bytes
                                     document.getElementById('imgError').textContent = "Image Product must be less than 10MB.";
                                     isValid = false;
                                 } else if (!/\.(jpg)$/i.test(img.name)) {
